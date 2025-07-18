@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import GameGenerator from '@/components/GameGenerator';
 import SuggestionGenerator from '@/components/SuggestionGenerator';
+import BothMode from '@/components/BothMode';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'games' | 'suggestions'>('games');
+  const [activeTab, setActiveTab] = useState<'games' | 'suggestions' | 'both'>('games');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-800">
@@ -42,11 +43,23 @@ export default function Home() {
               >
                 Suggestion Generator
               </button>
+              <button
+                onClick={() => setActiveTab('both')}
+                className={`px-8 py-3 rounded-full font-semibold transition-all ${
+                  activeTab === 'both'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
+                }`}
+              >
+                Both Mode
+              </button>
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-            {activeTab === 'games' ? <GameGenerator /> : <SuggestionGenerator />}
+            {activeTab === 'games' && <GameGenerator />}
+            {activeTab === 'suggestions' && <SuggestionGenerator />}
+            {activeTab === 'both' && <BothMode />}
           </div>
         </div>
 

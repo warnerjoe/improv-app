@@ -2,13 +2,21 @@
 
 import { useState } from 'react';
 import { improvGames, ImprovGame } from '@/lib/games';
+import { getRandomQuestions, getRandomAnswer, SuggestionQuestion } from '@/lib/suggestions';
 import { doesGameFitPlayerCount, getUniquePlayerCounts } from '@/lib/gameHelpers';
 
-export default function GameGenerator() {
+export default function BothMode() {
   const [currentGame, setCurrentGame] = useState<ImprovGame | null>(null);
   const [usedGames, setUsedGames] = useState<Set<string>>(new Set());
   const [showAllDetails, setShowAllDetails] = useState(false);
   const [playerCount, setPlayerCount] = useState<number | null>(null);
+  
+  const [questions, setQuestions] = useState<SuggestionQuestion[]>([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const [showBoth, setShowBoth] = useState(false);
 
   const getRandomGame = () => {
     let availableGames = improvGames.filter(game => 
@@ -37,6 +45,38 @@ export default function GameGenerator() {
   };
   
   const availablePlayerCounts = getUniquePlayerCounts(improvGames);
+
+  const generateQuestions = () => {
+    setQuestions(getRandomQuestions(3));
+    setSelectedQuestion(null);
+    setAnswer(null);
+  };
+
+  const selectQuestion = (questionId: string) => {
+    setSelectedQuestion(questionId);
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      setAnswer(getRandomAnswer(questionId));
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const generateBoth = () => {
+    getRandomGame();
+    generateQuestions();
+    setShowBoth(true);
+    setSelectedQuestion(null);
+    setAnswer(null);
+  };
+
+  const reset = () => {
+    setCurrentGame(null);
+    setQuestions([]);
+    setSelectedQuestion(null);
+    setAnswer(null);
+    setShowBoth(false);
+  };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -68,9 +108,18 @@ export default function GameGenerator() {
     }
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="text-center space-y-4">
+  if (!showBoth) {
+    return (
+      <div className="text-center py-12 space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Get both a game AND a suggestion!
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Perfect for when you need a complete improv setup
+          </p>
+        </div>
+        
         <div className="flex justify-center items-center gap-4">
           <label className="text-gray-700 dark:text-gray-300 font-semibold">
             Number of players:
@@ -90,21 +139,22 @@ export default function GameGenerator() {
         </div>
         
         <button
-          onClick={getRandomGame}
-          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transform transition hover:scale-105"
+          onClick={generateBoth}
+          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transform transition hover:scale-105"
         >
-          {currentGame ? 'Get Another Game!' : 'Get Random Game!'}
+          Generate Game + Suggestion!
         </button>
-        {usedGames.size > 0 && (
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {usedGames.size} of {improvGames.filter(g => doesGameFitPlayerCount(g, playerCount)).length} games shown
-            {playerCount && ` (for ${playerCount} players)`}
-          </p>
-        )}
       </div>
+    );
+  }
 
+  return (
+    <div className="space-y-8">
       {currentGame && (
         <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 space-y-4 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">Your Game</h3>
+          </div>
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
             {currentGame.name}
           </h2>
@@ -140,14 +190,71 @@ export default function GameGenerator() {
         </div>
       )}
 
-      {!currentGame && (
-        <div className="text-center py-12">
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">
-            Ready to discover your next improv game?
-          </p>
-          <p className="text-gray-500 dark:text-gray-500">
-            Click the button above to get started!
-          </p>
+      <div className="border-t-2 border-gray-200 dark:border-gray-600"></div>
+
+      {questions.length > 0 && !selectedQuestion && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold text-pink-600 dark:text-pink-400 uppercase tracking-wide">Get a Suggestion</h3>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Choose a question to ask the audience:
+          </h2>
+          {questions.map((question) => (
+            <button
+              key={question.id}
+              onClick={() => selectQuestion(question.id)}
+              className="w-full text-left p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group"
+            >
+              <p className="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
+                "{question.question}"
+              </p>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {selectedQuestion && (
+        <div className="space-y-6">
+          <div className="text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">You asked:</p>
+            <p className="text-xl font-bold text-gray-800 dark:text-white">
+              "{questions.find(q => q.id === selectedQuestion)?.question}"
+            </p>
+          </div>
+
+          {isLoading && (
+            <div className="text-center py-6">
+              <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-pink-500"></div>
+              <p className="mt-3 text-gray-600 dark:text-gray-400 animate-pulse">
+                The audience is thinking...
+              </p>
+            </div>
+          )}
+
+          {answer && !isLoading && (
+            <div className="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 rounded-xl p-6 text-center animate-fadeIn">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">From the audience:</p>
+              <p className="text-2xl font-bold text-gray-800 dark:text-white">
+                "{answer}"
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {((answer && !isLoading) || (!selectedQuestion && questions.length > 0)) && (
+        <div className="flex gap-4 justify-center pt-4">
+          <button
+            onClick={generateBoth}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105"
+          >
+            New Game + Suggestion
+          </button>
+          <button
+            onClick={reset}
+            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105"
+          >
+            Start Over
+          </button>
         </div>
       )}
     </div>
