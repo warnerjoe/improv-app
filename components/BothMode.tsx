@@ -110,24 +110,24 @@ export default function BothMode() {
 
   if (!showBoth) {
     return (
-      <div className="text-center py-12 space-y-6">
+      <div className="text-center py-8 sm:py-12 space-y-4 sm:space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">
             Get both a game AND a suggestion!
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 px-4">
             Perfect for when you need a complete improv setup
           </p>
         </div>
         
-        <div className="flex justify-center items-center gap-4">
-          <label className="text-gray-700 dark:text-gray-300 font-semibold">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4">
+          <label className="text-gray-700 dark:text-gray-300 font-semibold text-sm sm:text-base">
             Number of players:
           </label>
           <select
             value={playerCount || ''}
             onChange={(e) => setPlayerCount(e.target.value ? parseInt(e.target.value) : null)}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="px-3 sm:px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm sm:text-base"
           >
             <option value="">Any number</option>
             {availablePlayerCounts.map(count => (
@@ -140,7 +140,7 @@ export default function BothMode() {
         
         <button
           onClick={generateBoth}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transform transition hover:scale-105"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-base sm:text-lg md:text-xl shadow-lg transform transition hover:scale-105"
         >
           Generate Game + Suggestion!
         </button>
@@ -151,11 +151,11 @@ export default function BothMode() {
   return (
     <div className="space-y-8">
       {currentGame && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 space-y-4 animate-fadeIn">
+        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 animate-fadeIn">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">Your Game</h3>
+            <h3 className="text-xs sm:text-sm font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">Your Game</h3>
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
             {currentGame.name}
           </h2>
           
@@ -195,16 +195,16 @@ export default function BothMode() {
       {questions.length > 0 && !selectedQuestion && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold text-pink-600 dark:text-pink-400 uppercase tracking-wide">Get a Suggestion</h3>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">
             Choose a question to ask the audience:
           </h2>
           {questions.map((question) => (
             <button
               key={question.id}
               onClick={() => selectQuestion(question.id)}
-              className="w-full text-left p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group"
+              className="w-full text-left p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group"
             >
-              <p className="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
+              <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
                 "{question.question}"
               </p>
             </button>
@@ -216,7 +216,7 @@ export default function BothMode() {
         <div className="space-y-6">
           <div className="text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">You asked:</p>
-            <p className="text-xl font-bold text-gray-800 dark:text-white">
+            <p className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-white">
               "{questions.find(q => q.id === selectedQuestion)?.question}"
             </p>
           </div>
@@ -233,7 +233,7 @@ export default function BothMode() {
           {answer && !isLoading && (
             <div className="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 rounded-xl p-6 text-center animate-fadeIn">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">From the audience:</p>
-              <p className="text-2xl font-bold text-gray-800 dark:text-white">
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
                 "{answer}"
               </p>
             </div>
@@ -242,16 +242,16 @@ export default function BothMode() {
       )}
 
       {((answer && !isLoading) || (!selectedQuestion && questions.length > 0)) && (
-        <div className="flex gap-4 justify-center pt-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4">
           <button
             onClick={generateBoth}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-full shadow-lg transform transition hover:scale-105 text-sm sm:text-base"
           >
             New Game + Suggestion
           </button>
           <button
             onClick={reset}
-            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105"
+            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-full shadow-lg transform transition hover:scale-105 text-sm sm:text-base"
           >
             Start Over
           </button>

@@ -71,14 +71,14 @@ export default function GameGenerator() {
   return (
     <div className="space-y-6">
       <div className="text-center space-y-4">
-        <div className="flex justify-center items-center gap-4">
-          <label className="text-gray-700 dark:text-gray-300 font-semibold">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4">
+          <label className="text-gray-700 dark:text-gray-300 font-semibold text-sm sm:text-base">
             Number of players:
           </label>
           <select
             value={playerCount || ''}
             onChange={(e) => setPlayerCount(e.target.value ? parseInt(e.target.value) : null)}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="px-3 sm:px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm sm:text-base"
           >
             <option value="">Any number</option>
             {availablePlayerCounts.map(count => (
@@ -91,7 +91,7 @@ export default function GameGenerator() {
         
         <button
           onClick={getRandomGame}
-          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transform transition hover:scale-105"
+          className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-base sm:text-lg md:text-xl shadow-lg transform transition hover:scale-105"
         >
           {currentGame ? 'Get Another Game!' : 'Get Random Game!'}
         </button>
@@ -104,8 +104,8 @@ export default function GameGenerator() {
       </div>
 
       {currentGame && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 space-y-4 animate-fadeIn">
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 animate-fadeIn">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
             {currentGame.name}
           </h2>
           
@@ -141,11 +141,11 @@ export default function GameGenerator() {
       )}
 
       {!currentGame && (
-        <div className="text-center py-12">
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">
+        <div className="text-center py-8 sm:py-12">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-3 sm:mb-4">
             Ready to discover your next improv game?
           </p>
-          <p className="text-gray-500 dark:text-gray-500">
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-500">
             Click the button above to get started!
           </p>
         </div>
