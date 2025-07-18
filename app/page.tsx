@@ -13,7 +13,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-4">
-            Improv Comedy Helper
+            🎭 Improv Toolkit
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300">
             Random games and audience suggestions for your improv show
