@@ -1,9 +1,13 @@
 import { ImprovGame } from './games';
 
-export function doesGameFitPlayerCount(game: ImprovGame, playerCount: number | null): boolean {
+interface PlayerCountItem {
+  playerCount: string;
+}
+
+export function doesGameFitPlayerCount(item: PlayerCountItem, playerCount: number | null): boolean {
   if (playerCount === null) return true;
   
-  const range = game.playerCount;
+  const range = item.playerCount;
   
   // Handle exact numbers like "4"
   if (/^\d+$/.test(range)) {
@@ -35,11 +39,11 @@ export function doesGameFitPlayerCount(game: ImprovGame, playerCount: number | n
   return true;
 }
 
-export function getUniquePlayerCounts(games: ImprovGame[]): number[] {
+export function getUniquePlayerCounts(items: PlayerCountItem[]): number[] {
   const counts = new Set<number>();
   
-  games.forEach(game => {
-    const range = game.playerCount;
+  items.forEach(item => {
+    const range = item.playerCount;
     
     // Extract numbers from the player count
     if (/^\d+$/.test(range)) {
